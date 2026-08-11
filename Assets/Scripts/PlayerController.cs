@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
-    private Controls controls;
+    [SerializeField] private InputReaderSO inputReader;
     private Vector2 currentMovement;
 
     [SerializeField] private GameObject plane;
@@ -17,26 +17,25 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float xBoundary = 5f;
     [SerializeField] private float yBoundary = 5f;
 
-    private void Awake()
-    {
-        controls = new Controls();
-    }
-
-    private void Update()
-    {
-        currentMovement = controls.Player.Move.ReadValue<Vector2>();
-        Move();
-        Tilt();
-    }
-
     private void OnEnable()
     {
-        controls.Player.Enable();   
+        inputReader.onMoveInput += UpdateMoveVector;
     }
 
     private void OnDisable()
     {
-        controls.Player.Disable();
+        inputReader.onMoveInput -= UpdateMoveVector;
+    }
+
+    private void Update()
+    {
+        Move();
+        Tilt();
+    }
+
+    private void UpdateMoveVector(Vector2 movement)
+    {
+        currentMovement = movement;
     }
 
     private void Move()
