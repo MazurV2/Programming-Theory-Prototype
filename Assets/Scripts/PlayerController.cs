@@ -47,12 +47,12 @@ public class PlayerController : MonoBehaviour
 
     private void ClampPosition()
     {
-        Vector3 newPosition = transform.position;
+        Vector3 newPosition = transform.localPosition;
 
         newPosition.x = Mathf.Clamp(newPosition.x, -xBoundary, xBoundary);
         newPosition.y = Mathf.Clamp(newPosition.y, -yBoundary, yBoundary);
 
-        transform.position = newPosition;
+        transform.localPosition = newPosition;
     }
 
     private void Tilt()
@@ -62,6 +62,6 @@ public class PlayerController : MonoBehaviour
 
         Quaternion targetRotation = Quaternion.Euler(pitch, 0f, roll);
 
-        plane.transform.rotation = Quaternion.Slerp(plane.transform.rotation, targetRotation, baseTiltSpeed * Time.deltaTime);
+        plane.transform.localRotation = Quaternion.Slerp(plane.transform.localRotation, targetRotation, baseTiltSpeed * Time.deltaTime);
     }
 }
