@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Pool;
 
 public abstract class EnemyController : MonoBehaviour, IDamageable
 {
@@ -11,6 +12,8 @@ public abstract class EnemyController : MonoBehaviour, IDamageable
 
     protected EnemyState currentState = EnemyState.FlyIn;
     
+    protected IObjectPool<GameObject> pool;
+
     [SerializeField] protected int health = 1;
 
     [Space(10)]
@@ -39,6 +42,11 @@ public abstract class EnemyController : MonoBehaviour, IDamageable
         float yPosition = Random.Range(-yPositionRange, yPositionRange);
 
         maneuverPosition = new Vector3(xPosition, yPosition, zPosition);
+    }
+
+    private void OnEnable()
+    {
+        currentState = EnemyState.FlyIn;
     }
 
     public virtual void TakeDamage(int amount)
@@ -86,7 +94,7 @@ public abstract class EnemyController : MonoBehaviour, IDamageable
 
     protected virtual void Die()
     {
-        gameObject.SetActive(false);
+        pool.Release(gameObject);
     }
 
     private void Update()
@@ -97,5 +105,10 @@ public abstract class EnemyController : MonoBehaviour, IDamageable
             case EnemyState.Maneuver: Move(); break;
             case EnemyState.FlyOut: FlyOut(); break;
         }
+    }
+
+    public void SetPool(IObjectPool<GameObject> pool)
+    {
+        this.pool = pool;
     }
 }
