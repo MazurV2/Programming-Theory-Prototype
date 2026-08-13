@@ -4,6 +4,12 @@ public class StraightEnemy : EnemyController
 {
     protected override void Move()
     {
-        currentState = EnemyState.FlyOut;
+        if (Time.time < maneuverTimeEnd)
+        {
+
+        } else
+        {
+            currentState = EnemyState.FlyOut;
+        }
     }
 }

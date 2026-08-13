@@ -94,7 +94,13 @@ public abstract class EnemyController : MonoBehaviour, IDamageable
 
     protected virtual void Die()
     {
-        pool.Release(gameObject);
+        if (pool != null)
+        {
+            pool.Release(gameObject);
+        } else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void Update()

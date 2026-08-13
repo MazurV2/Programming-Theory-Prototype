@@ -10,12 +10,13 @@ public class WaveEntrySO : ScriptableObject
         public GameObject enemyPrefab;
         public int enemyCount;
         public float spawnInterval;
+        public float timeUntilNextGroup;
     }
 
     [Header("Wave settings")]
-    [SerializeField] private List<WaveEntry> waveList;
+    [SerializeField] private List<WaveEntry> enemyGroupList;
     [SerializeField] private float timeUntilNextWave = 5f;
 
-    public IReadOnlyList<WaveEntry> WaveList => waveList;
+    public IReadOnlyList<WaveEntry> EnemyGroupList => enemyGroupList;
     public float TimeUntilNextWave => timeUntilNextWave;
 }

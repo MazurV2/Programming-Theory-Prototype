@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -7,14 +8,15 @@ public class EnemySpawner : MonoBehaviour
     [System.Serializable]
     public class EnemyPoolData
     {
-        public IObjectPool<GameObject> pool;
         public GameObject prefab;
         public int basePoolSize = 10;
         public int maxPoolSize = 20;
     }
 
-    [SerializeField] private List<EnemyPoolData> enemyPoolList = new List<EnemyPoolData>();
+    [SerializeField] private List<EnemyPoolData> enemyPoolDataList;
     private Dictionary<GameObject, IObjectPool<GameObject>> enemyPoolDict = new Dictionary<GameObject, IObjectPool<GameObject>>();
+
+    [SerializeField] private List<WaveEntrySO> waveList;
 
     [Space(10)]
     [SerializeField] private float spawnRangeX = 5f;
@@ -26,31 +28,39 @@ public class EnemySpawner : MonoBehaviour
         InitializeEnemyPools();
     }
 
+    private void Start()
+    {
+        StartCoroutine(SpawnAllWavesRoutine());
+    }
+
     private void InitializeEnemyPools()
     {
-        foreach (var enemyPool in enemyPoolList)
+        foreach (var poolData in enemyPoolDataList)
         {
-            enemyPool.pool = new ObjectPool<GameObject>(
-                createFunc: () => CreateEnemies(enemyPool.prefab, enemyPool.pool),
+            IObjectPool<GameObject> pool = new ObjectPool<GameObject>(
+                createFunc: () => CreateEnemies(poolData.prefab),
                 actionOnGet: OnGetFromPool,
                 actionOnRelease: OnReleaseToPool,
                 actionOnDestroy: OnDestroyObject,
                 collectionCheck: true,
-                defaultCapacity: enemyPool.basePoolSize,
-                maxSize: enemyPool.maxPoolSize
+                defaultCapacity: poolData.basePoolSize,
+                maxSize: poolData.maxPoolSize
             );
 
-            enemyPoolDict.Add(enemyPool.prefab, enemyPool.pool);
+            enemyPoolDict.Add(poolData.prefab, pool);
         }
     }
 
-    private GameObject CreateEnemies(GameObject enemyPrefab, IObjectPool<GameObject> enemyPool)
+    private GameObject CreateEnemies(GameObject enemyPrefab)
     {
         GameObject enemyInstance = Instantiate(enemyPrefab);
 
         if (enemyInstance.TryGetComponent<EnemyController>(out var enemy))
         {
-            enemy.SetPool(enemyPool);
+            if (enemyPoolDict.TryGetValue(enemyPrefab, out var enemyPool))
+            {
+                enemy.SetPool(enemyPool);
+            }
         }
 
         return enemyInstance;
@@ -74,6 +84,29 @@ public class EnemySpawner : MonoBehaviour
 
     private Vector3 GetRandomSpawnPosition() {
         return new Vector3(Random.Range(-spawnRangeX, spawnRangeX), spawnPositionY, spawnPositionZ);
+    }
+
+    private IEnumerator SpawnAllWavesRoutine()
+    {
+        foreach (WaveEntrySO waveData in waveList)
+        {
+            yield return StartCoroutine(SpawnWaveRoutine(waveData));
+
+            yield return new WaitForSeconds(waveData.TimeUntilNextWave);
+        }
+    }
+
+    private IEnumerator SpawnWaveRoutine(WaveEntrySO waveData)
+    {
+        foreach (var enemyGroup in waveData.EnemyGroupList)
+        {
+            for (int i = 0; i < enemyGroup.enemyCount; i++)
+            {
+                SpawnEnemy(enemyGroup.enemyPrefab);
+                yield return new WaitForSeconds(enemyGroup.spawnInterval);
+            }
+            yield return new WaitForSeconds(enemyGroup.timeUntilNextGroup);
+        }
     }
 
     private void SpawnEnemy(GameObject enemyPrefab)
