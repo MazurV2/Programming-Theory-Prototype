@@ -1,60 +1,59 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
 public class EnemySpawner : MonoBehaviour
 {
-    private IObjectPool<GameObject> enemyPool;
-    [SerializeField] private GameObject[] enemyPrefabList;
-    private int basePoolSize = 10;
-    private int maxPoolSize = 20;
+    [System.Serializable]
+    public class EnemyPoolData
+    {
+        public IObjectPool<GameObject> pool;
+        public GameObject prefab;
+        public int basePoolSize = 10;
+        public int maxPoolSize = 20;
+    }
+
+    [SerializeField] private List<EnemyPoolData> enemyPoolList = new List<EnemyPoolData>();
+    private Dictionary<GameObject, IObjectPool<GameObject>> enemyPoolDict = new Dictionary<GameObject, IObjectPool<GameObject>>();
 
     [Space(10)]
-    [SerializeField] private float spawnWaveInterval = 5f;
-    [SerializeField] private int enemiesPerWave = 3;
-    private float nextWaveSpawnTime = 0f;
-
-    [Space(10)]
-    private float spawnRangeX = 5f;
-    private float spawnPositionY = 10f;
-    private float spawnPositionZ = -10f;
+    [SerializeField] private float spawnRangeX = 5f;
+    [SerializeField] private float spawnPositionY = 10f;
+    [SerializeField] private float spawnPositionZ = -10f;
 
     private void Awake()
     {
-        enemyPool = new ObjectPool<GameObject>(
-                createFunc: CreateEnemies,
+        InitializeEnemyPools();
+    }
+
+    private void InitializeEnemyPools()
+    {
+        foreach (var enemyPool in enemyPoolList)
+        {
+            enemyPool.pool = new ObjectPool<GameObject>(
+                createFunc: () => CreateEnemies(enemyPool.prefab, enemyPool.pool),
                 actionOnGet: OnGetFromPool,
                 actionOnRelease: OnReleaseToPool,
                 actionOnDestroy: OnDestroyObject,
-                true,
-                basePoolSize,
-                maxPoolSize
+                collectionCheck: true,
+                defaultCapacity: enemyPool.basePoolSize,
+                maxSize: enemyPool.maxPoolSize
             );
-    }
 
-    private void Update()
-    {
-        if (Time.time >= nextWaveSpawnTime)
-        {
-            nextWaveSpawnTime = Time.time + spawnWaveInterval;
-            for (int i = 0; i < enemiesPerWave; i++)
-            {
-                SpawnEnemy();
-            }
+            enemyPoolDict.Add(enemyPool.prefab, enemyPool.pool);
         }
     }
 
-    private GameObject CreateEnemies()
+    private GameObject CreateEnemies(GameObject enemyPrefab, IObjectPool<GameObject> enemyPool)
     {
-        GameObject enemyPrefab = enemyPrefabList[Random.Range(0, enemyPrefabList.Length)];
+        GameObject enemyInstance = Instantiate(enemyPrefab);
 
-        GameObject gameObject = Instantiate(enemyPrefab);
-
-        if (gameObject.TryGetComponent<EnemyController>(out var enemy))
+        if (enemyInstance.TryGetComponent<EnemyController>(out var enemy))
         {
             enemy.SetPool(enemyPool);
         }
 
-        return gameObject;
+        return enemyInstance;
     }
 
     private void OnGetFromPool(GameObject enemy)
@@ -73,13 +72,15 @@ public class EnemySpawner : MonoBehaviour
         Destroy(enemy);
     }
 
-    private void SpawnEnemy()
-    {
-        enemyPool.Get();
+    private Vector3 GetRandomSpawnPosition() {
+        return new Vector3(Random.Range(-spawnRangeX, spawnRangeX), spawnPositionY, spawnPositionZ);
     }
 
-    private Vector3 GetRandomSpawnPosition() {
-        Vector3 randomSpawnPosition = new Vector3(Random.Range(-spawnRangeX, spawnRangeX), spawnPositionY, spawnPositionZ);
-        return randomSpawnPosition;
+    private void SpawnEnemy(GameObject enemyPrefab)
+    {
+        if (enemyPoolDict.TryGetValue(enemyPrefab, out var enemyPool))
+        {
+            enemyPool.Get();
+        }
     }
 }

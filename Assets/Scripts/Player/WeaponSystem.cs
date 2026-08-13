@@ -22,21 +22,21 @@ public class WeaponSystem : MonoBehaviour
             actionOnGet: OnGetFromPool,
             actionOnRelease: OnReleaseToPool,
             actionOnDestroy: OnDestroyObject,
-            true,
-            basePoolSize,
-            maxPoolSize);
+            collectionCheck: true,
+            defaultCapacity: basePoolSize,
+            maxSize: maxPoolSize);
     }
 
     private GameObject CreateProjectile()
     {
-        GameObject gameObject = Instantiate(projectilePrefab);
+        GameObject projectileInstance = Instantiate(projectilePrefab);
 
-        if (gameObject.TryGetComponent<Projectile>(out var projectile))
+        if (projectileInstance.TryGetComponent<Projectile>(out var projectile))
         {
             projectile.SetPool(projectilePool);
         }
 
-        return gameObject;
+        return projectileInstance;
     }
 
     private void OnGetFromPool(GameObject projectile)
