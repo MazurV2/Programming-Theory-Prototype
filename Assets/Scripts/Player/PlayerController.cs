@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     private float maxTiltY = 45f;
 
     [SerializeField] private float xBoundary = 5f;
-    [SerializeField] private float yBoundary = 5f;
+    [SerializeField] private float yBoundary = 3f;
 
     private void OnEnable()
     {

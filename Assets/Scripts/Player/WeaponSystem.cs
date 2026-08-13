@@ -12,8 +12,8 @@ public class WeaponSystem : MonoBehaviour
 
     private IObjectPool<GameObject> projectilePool;
     [SerializeField] private GameObject projectilePrefab;
-    private int basePoolSize = 18;
-    private int maxPoolSize = 36;
+    private int basePoolSize = 20;
+    private int maxPoolSize = 40;
 
     private void Awake()
     {

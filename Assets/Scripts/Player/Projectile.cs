@@ -8,6 +8,7 @@ public class Projectile : MonoBehaviour
 
     [SerializeField] private float baseLifetime = 3f;
     [SerializeField] private float baseSpeed = 5f;
+    [SerializeField] private int damage = 1;
 
     private float currentLifetime;
 
@@ -27,8 +28,9 @@ public class Projectile : MonoBehaviour
         transform.Translate(Vector3.forward * baseSpeed * Time.deltaTime);
 
         currentLifetime -= Time.deltaTime;
-        if (currentLifetime <= 0f)
+        if (currentLifetime <= 0f && !isReleased)
         {
+            isReleased = true;
             ReleaseToPool();
         } 
     }
@@ -42,6 +44,19 @@ public class Projectile : MonoBehaviour
         } else
         {
             Destroy(gameObject);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.TryGetComponent<IDamageable>(out var damageable))
+        {
+            damageable.TakeDamage(damage);
+            if (!isReleased)
+            {
+                isReleased = true;
+                ReleaseToPool();
+            }
         }
     }
 }
