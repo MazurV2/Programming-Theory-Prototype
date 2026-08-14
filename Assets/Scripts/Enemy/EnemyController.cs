@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Pool;
 
-public abstract class EnemyController : MonoBehaviour, IDamageable
+public abstract class EnemyController : MonoBehaviour
 {
     protected enum EnemyState
     {
@@ -10,11 +10,11 @@ public abstract class EnemyController : MonoBehaviour, IDamageable
         FlyOut
     }
 
+    [SerializeField] private HealthSystem healthSystem;
+
     protected EnemyState currentState = EnemyState.FlyIn;
     
     protected IObjectPool<GameObject> pool;
-
-    [SerializeField] protected int health = 1;
 
     [Space(10)]
     [SerializeField] protected float flyInSpeed = 10f;
@@ -47,12 +47,35 @@ public abstract class EnemyController : MonoBehaviour, IDamageable
     private void OnEnable()
     {
         currentState = EnemyState.FlyIn;
+
+        if (healthSystem != null)
+        {
+            healthSystem.ResetHealth();
+            healthSystem.OnDied += Die;
+        }
     }
 
-    public virtual void TakeDamage(int amount)
+    private void OnDisable()
     {
-        health -= amount;
-        if (health <= 0) Die();
+        if (healthSystem != null)
+        {
+            healthSystem.OnDied -= Die;
+        }
+    }
+
+    private void Update()
+    {
+        switch (currentState)
+        {
+            case EnemyState.FlyIn: FlyIn(); break;
+            case EnemyState.Maneuver: Move(); break;
+            case EnemyState.FlyOut: FlyOut(); break;
+        }
+    }
+
+    public void SetPool(IObjectPool<GameObject> pool)
+    {
+        this.pool = pool;
     }
 
     protected virtual void FlyIn()
@@ -87,7 +110,7 @@ public abstract class EnemyController : MonoBehaviour, IDamageable
         }
     }
 
-    private void MoveToPosition(Vector3 targetPosition, float speed)
+    protected void MoveToPosition(Vector3 targetPosition, float speed)
     {
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
     }
@@ -101,20 +124,5 @@ public abstract class EnemyController : MonoBehaviour, IDamageable
         {
             Destroy(gameObject);
         }
-    }
-
-    private void Update()
-    {
-        switch (currentState)
-        {
-            case EnemyState.FlyIn: FlyIn(); break;
-            case EnemyState.Maneuver: Move(); break;
-            case EnemyState.FlyOut: FlyOut(); break;
-        }
-    }
-
-    public void SetPool(IObjectPool<GameObject> pool)
-    {
-        this.pool = pool;
     }
 }

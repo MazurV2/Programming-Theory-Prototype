@@ -13,7 +13,9 @@ GameObject:
   - component: {fileID: 5987329329329905404}
   - component: {fileID: 7998015040513987609}
   - component: {fileID: 4597427252477633985}
-  m_Layer: 0
+  - component: {fileID: 7476353857178761081}
+  - component: {fileID: 1948270729551744623}
+  m_Layer: 8
   m_Name: Still Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,7 +109,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -125,7 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a45744b8c72f0394896db5bfffdd23a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StraightEnemy
-  health: 3
+  healthSystem: {fileID: 7476353857178761081}
   flyInSpeed: 10
   maneuverSpeed: 5
   flyOutSpeed: 10
@@ -133,3 +135,34 @@ MonoBehaviour:
   xPositionRange: 5
   yPositionRange: 3
   zPosition: 10
+--- !u!114 &7476353857178761081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1472937420316985438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2a33d12b366bc243940905dbcff3603, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthSystem
+  maxHealth: 3
+--- !u!114 &1948270729551744623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1472937420316985438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6c3a85b5ad42fe41b81de2fd5200c72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ContactDamageSystem
+  damageToDeal: 1
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 64
+  healthSystem: {fileID: 7476353857178761081}
+  destroySelfOnContact: 1

@@ -13,7 +13,9 @@ GameObject:
   - component: {fileID: 5591725684937680708}
   - component: {fileID: 3083576392142675996}
   - component: {fileID: 2345467537414855774}
-  m_Layer: 0
+  - component: {fileID: 3647465901055531004}
+  - component: {fileID: -3202624068281925442}
+  m_Layer: 8
   m_Name: Sweeper Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,7 +109,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -125,7 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46bae824bc51ae5448601a36cbd7fae2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SweeperEnemy
-  health: 1
+  healthSystem: {fileID: 3647465901055531004}
   flyInSpeed: 10
   maneuverSpeed: 5
   flyOutSpeed: 10
@@ -135,3 +137,34 @@ MonoBehaviour:
   zPosition: 10
   frequency: 3
   magnitude: 3
+--- !u!114 &3647465901055531004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5354361582494169304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2a33d12b366bc243940905dbcff3603, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthSystem
+  maxHealth: 1
+--- !u!114 &-3202624068281925442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5354361582494169304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6c3a85b5ad42fe41b81de2fd5200c72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ContactDamageSystem
+  damageToDeal: 1
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 64
+  healthSystem: {fileID: 3647465901055531004}
+  destroySelfOnContact: 1

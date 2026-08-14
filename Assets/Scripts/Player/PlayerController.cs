@@ -6,25 +6,46 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private InputReaderSO inputReader;
     private Vector2 currentMovement;
 
+    [SerializeField] private HealthSystem healthSystem;
+
     [SerializeField] private GameObject plane;
 
+    [Space(10)]
     [SerializeField] private float baseMoveSpeed = 5f;
     [SerializeField] private float baseTiltSpeed = 5f;
 
     private float maxTiltX = 45f;
     private float maxTiltY = 45f;
 
+    [Space(10)]
     [SerializeField] private float xBoundary = 5f;
     [SerializeField] private float yBoundary = 3f;
 
     private void OnEnable()
     {
-        inputReader.onMoveInput += UpdateMoveVector;
+        if (inputReader != null) 
+        { 
+            inputReader.onMoveInput += UpdateMoveVector;
+        }
+
+        if (healthSystem != null)
+        {
+            healthSystem.ResetHealth();
+            healthSystem.OnDied += Die;
+        }
     }
 
     private void OnDisable()
     {
-        inputReader.onMoveInput -= UpdateMoveVector;
+        if (inputReader != null)
+        {
+            inputReader.onMoveInput -= UpdateMoveVector;
+        }
+
+        if (healthSystem != null)
+        {
+            healthSystem.OnDied -= Die;
+        }
     }
 
     private void Update()
@@ -62,5 +83,10 @@ public class PlayerController : MonoBehaviour
         Quaternion targetRotation = Quaternion.Euler(pitch, 0f, roll);
 
         plane.transform.localRotation = Quaternion.Slerp(plane.transform.localRotation, targetRotation, baseTiltSpeed * Time.deltaTime);
+    }
+
+    private void Die()
+    {
+        gameObject.SetActive(false);
     }
 }
