@@ -51,7 +51,7 @@ public class Projectile : MonoBehaviour
     {
         if (other.TryGetComponent<IDamageable>(out var damageable))
         {
-            damageable.TakeDamage(damage);
+            damageable.TakeDamage(damage, DamageSource.PlayerProjectile);
             if (!isReleased)
             {
                 isReleased = true;

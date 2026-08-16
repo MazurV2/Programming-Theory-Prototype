@@ -16,13 +16,13 @@ public class ContactDamageSystem : MonoBehaviour
             // Deal damage to object hit (if it has health)
             if (other.TryGetComponent<IDamageable>(out var damageable))
             {
-                damageable.TakeDamage(damageToDeal);
+                damageable.TakeDamage(damageToDeal, DamageSource.Contact);
             }
 
             // Self destruct if necessary
             if (destroySelfOnContact && healthSystem != null)
             {
-                healthSystem.TakeDamage(healthSystem.MaxHealth);
+                healthSystem.TakeDamage(healthSystem.MaxHealth, DamageSource.Contact);
             }
         }
     }

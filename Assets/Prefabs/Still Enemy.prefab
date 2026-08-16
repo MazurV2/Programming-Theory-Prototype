@@ -128,6 +128,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StraightEnemy
   healthSystem: {fileID: 7476353857178761081}
+  scoreToGive: 50
+  scoreSO: {fileID: 11400000, guid: 16828ce25c61a6d4e8f279fe02874882, type: 2}
   flyInSpeed: 10
   maneuverSpeed: 5
   flyOutSpeed: 10
@@ -148,6 +150,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthSystem
   maxHealth: 3
+  currentHealth: 0
+  currentHealthSO: {fileID: 0}
+  maxHealthSO: {fileID: 0}
 --- !u!114 &1948270729551744623
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -10,29 +10,34 @@ public abstract class EnemyController : MonoBehaviour
         FlyOut
     }
 
-    [SerializeField] private HealthSystem healthSystem;
-
     protected EnemyState currentState = EnemyState.FlyIn;
-    
-    protected IObjectPool<GameObject> pool;
 
-    [Space(10)]
+    protected IObjectPool<GameObject> pool;
+    
+    [Header("Health Variables")]
+    [SerializeField] private HealthSystem healthSystem;
+    
+    [Header("Score Variables")]
+    [SerializeField] private int scoreToGive;
+    [SerializeField] private IntVariableSO scoreSO;
+
+    [Header("Movement parameters")]
     [SerializeField] protected float flyInSpeed = 10f;
     [SerializeField] protected float maneuverSpeed = 5f;
     [SerializeField] protected float flyOutSpeed = 10f;
     
-    [Space(10)]
+    [Space(5)]
     [SerializeField] protected float maneuverTime = 5f;
     protected float maneuverTimeStart;
     protected float maneuverTimeEnd;
 
-    [Space(10)]
+    [Space(5)]
     protected Vector3 maneuverPosition;
     [SerializeField] private float xPositionRange = 5f;
     [SerializeField] private float yPositionRange = 3f;
     [SerializeField] private float zPosition = 20f;
     
-    [Space(10)]
+    [Space(5)]
     protected Vector3 escapePosition;
     protected float escapePositionZ = -10f;
 
@@ -106,7 +111,7 @@ public abstract class EnemyController : MonoBehaviour
 
         if (Vector3.Distance(transform.position, escapePosition) <= 0.1f)
         {
-            Die();
+            Die(DamageSource.Other);
         }
     }
 
@@ -115,7 +120,14 @@ public abstract class EnemyController : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
     }
 
-    protected virtual void Die()
+    protected void AddScore()
+    {
+        if (scoreSO == null) return;
+
+        scoreSO.Value += scoreToGive;
+    }
+
+    protected virtual void Die(DamageSource damageSource)
     {
         if (pool != null)
         {
@@ -123,6 +135,11 @@ public abstract class EnemyController : MonoBehaviour
         } else
         {
             Destroy(gameObject);
+        }
+
+        if (damageSource == DamageSource.PlayerProjectile)
+        {
+            AddScore();
         }
     }
 }

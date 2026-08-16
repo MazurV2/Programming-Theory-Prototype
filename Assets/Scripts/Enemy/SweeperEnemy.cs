@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SweeperEnemy : EnemyController
 {
-    [Space(10)]
+    [Header("Sweeping Variables")]
     [SerializeField] private float frequency = 3f;
     [SerializeField] private float magnitude = 3f;
 

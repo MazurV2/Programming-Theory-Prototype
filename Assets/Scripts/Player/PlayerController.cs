@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour
         plane.transform.localRotation = Quaternion.Slerp(plane.transform.localRotation, targetRotation, baseTiltSpeed * Time.deltaTime);
     }
 
-    private void Die()
+    private void Die(DamageSource damageSource)
     {
         gameObject.SetActive(false);
     }

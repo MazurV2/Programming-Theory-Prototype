@@ -7,7 +7,7 @@ public class HealthSystem : MonoBehaviour, IDamageable
     [SerializeField] private int maxHealth = 3;
     [SerializeField] private int currentHealth;
     public int MaxHealth => maxHealth;
-    public event Action OnDied;
+    public event Action<DamageSource> OnDied;
 
     [Header("Scriptable Object Variables [Optional]")]
     [SerializeField] private IntVariableSO currentHealthSO;
@@ -17,25 +17,25 @@ public class HealthSystem : MonoBehaviour, IDamageable
     {
         ResetHealth();
 
-        UpdateScriptableObjects(maxHealthSO, maxHealth);
+        UpdateSOVariable(maxHealthSO, maxHealth);
     }
 
     public void ResetHealth()
     {
         currentHealth = maxHealth;
 
-        UpdateScriptableObjects(currentHealthSO, currentHealth);
+        UpdateSOVariable(currentHealthSO, currentHealth);
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(int amount, DamageSource damageSource)
     {
         currentHealth = Mathf.Max(currentHealth - amount, 0);
 
-        UpdateScriptableObjects(currentHealthSO, currentHealth);
+        UpdateSOVariable(currentHealthSO, currentHealth);
 
         if (currentHealth <= 0)
         {
-            OnDied?.Invoke();
+            OnDied?.Invoke(damageSource);
         }
     }
 
@@ -43,10 +43,10 @@ public class HealthSystem : MonoBehaviour, IDamageable
     {
         currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
 
-        UpdateScriptableObjects(currentHealthSO, currentHealth);
+        UpdateSOVariable(currentHealthSO, currentHealth);
     }
 
-    private void UpdateScriptableObjects(IntVariableSO variableToUpdate, int value)
+    private void UpdateSOVariable(IntVariableSO variableToUpdate, int value)
     {
         if (variableToUpdate != null)
         {
