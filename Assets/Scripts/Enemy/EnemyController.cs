@@ -16,12 +16,8 @@ public abstract class EnemyController : MonoBehaviour
     
     [Header("Health Variables")]
     [SerializeField] private HealthSystem healthSystem;
-    
-    [Header("Score Variables")]
-    [SerializeField] private int scoreToGive;
-    [SerializeField] private IntVariableSO scoreSO;
 
-    [Header("Movement parameters")]
+    [Header("Movement Parameters")]
     [SerializeField] protected float flyInSpeed = 10f;
     [SerializeField] protected float maneuverSpeed = 5f;
     [SerializeField] protected float flyOutSpeed = 10f;
@@ -33,9 +29,8 @@ public abstract class EnemyController : MonoBehaviour
 
     [Space(5)]
     protected Vector3 maneuverPosition;
-    [SerializeField] private float xPositionRange = 5f;
-    [SerializeField] private float yPositionRange = 3f;
-    [SerializeField] private float zPosition = 20f;
+    [SerializeField] private GameBoundsSO gameBoundsSO;
+    [SerializeField] private float maneuverZ = 20f;
     
     [Space(5)]
     protected Vector3 escapePosition;
@@ -43,10 +38,10 @@ public abstract class EnemyController : MonoBehaviour
 
     private void Start()
     {
-        float xPosition = Random.Range(-xPositionRange, xPositionRange);
-        float yPosition = Random.Range(-yPositionRange, yPositionRange);
+        float maneuverX = Random.Range(gameBoundsSO.MinX, gameBoundsSO.MaxX);
+        float maneuverY = Random.Range(gameBoundsSO.MinY, gameBoundsSO.MaxY);
 
-        maneuverPosition = new Vector3(xPosition, yPosition, zPosition);
+        maneuverPosition = new Vector3(maneuverX, maneuverY, maneuverZ);
     }
 
     private void OnEnable()
@@ -120,13 +115,6 @@ public abstract class EnemyController : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
     }
 
-    protected void AddScore()
-    {
-        if (scoreSO == null) return;
-
-        scoreSO.Value += scoreToGive;
-    }
-
     protected virtual void Die(DamageSource damageSource)
     {
         if (pool != null)
@@ -135,11 +123,6 @@ public abstract class EnemyController : MonoBehaviour
         } else
         {
             Destroy(gameObject);
-        }
-
-        if (damageSource == DamageSource.PlayerProjectile)
-        {
-            AddScore();
         }
     }
 }

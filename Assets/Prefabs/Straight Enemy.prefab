@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4597427252477633985}
   - component: {fileID: -8402230238196580142}
   - component: {fileID: 6437819448591848102}
+  - component: {fileID: 3867969673782875847}
   m_Layer: 8
   m_Name: Straight Enemy
   m_TagString: Untagged
@@ -128,15 +129,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StraightEnemy
   healthSystem: {fileID: -8402230238196580142}
-  scoreToGive: 100
-  scoreSO: {fileID: 11400000, guid: 16828ce25c61a6d4e8f279fe02874882, type: 2}
   flyInSpeed: 10
   maneuverSpeed: 5
   flyOutSpeed: 5
   maneuverTime: 0
-  xPositionRange: 5
-  yPositionRange: 3
-  zPosition: 20
+  gameBoundsSO: {fileID: 11400000, guid: a1558fd4f93314b42b043afa104ce726, type: 2}
+  maneuverZ: 20
 --- !u!114 &-8402230238196580142
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,3 +169,18 @@ MonoBehaviour:
     m_Bits: 64
   healthSystem: {fileID: -8402230238196580142}
   destroySelfOnContact: 1
+--- !u!114 &3867969673782875847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1472937420316985438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 129c7482d7eab2b47bad54c601f8ab5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScoreSystem
+  scoreToGive: 100
+  scoreSO: {fileID: 11400000, guid: 16828ce25c61a6d4e8f279fe02874882, type: 2}
+  healthSystem: {fileID: -8402230238196580142}

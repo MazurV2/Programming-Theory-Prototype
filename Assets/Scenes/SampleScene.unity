@@ -153,10 +153,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   inputReader: {fileID: 11400000, guid: ec279e4920bd6c84587d64ee91cbfd2a, type: 2}
-  healthSystem: {fileID: 64134620}
   plane: {fileID: 1812282279}
+  healthSystem: {fileID: 64134620}
   baseMoveSpeed: 8
   baseTiltSpeed: 10
+  maxTiltX: 45
+  maxTiltY: 45
   xBoundary: 5
   yBoundary: 3
 --- !u!4 &64134616
@@ -1091,7 +1093,7 @@ MonoBehaviour:
   waveList:
   - {fileID: 11400000, guid: 0fdd2d0fd00e28e4cbff78efb2e21077, type: 2}
   - {fileID: 11400000, guid: b29c304813ba67d45b0cc6f02996a17c, type: 2}
-  spawnRangeX: 5
+  gameBoundsSO: {fileID: 11400000, guid: a1558fd4f93314b42b043afa104ce726, type: 2}
   spawnPositionY: 10
   spawnPositionZ: -10
 --- !u!4 &1386789969

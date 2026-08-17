@@ -13,13 +13,15 @@ public class EnemySpawner : MonoBehaviour
         public int maxPoolSize = 20;
     }
 
+    [Header("Enemy Pool Parameters")]
     [SerializeField] private List<EnemyPoolData> enemyPoolDataList;
     private Dictionary<GameObject, IObjectPool<GameObject>> enemyPoolDict = new Dictionary<GameObject, IObjectPool<GameObject>>();
 
+    [Header("Enemy Waves")]
     [SerializeField] private List<WaveEntrySO> waveList;
 
-    [Space(10)]
-    [SerializeField] private float spawnRangeX = 5f;
+    [Header("Spawn Parameters")]
+    [SerializeField] private GameBoundsSO gameBoundsSO;
     [SerializeField] private float spawnPositionY = 10f;
     [SerializeField] private float spawnPositionZ = -10f;
 
@@ -83,7 +85,7 @@ public class EnemySpawner : MonoBehaviour
     }
 
     private Vector3 GetRandomSpawnPosition() {
-        return new Vector3(Random.Range(-spawnRangeX, spawnRangeX), spawnPositionY, spawnPositionZ);
+        return new Vector3(Random.Range(gameBoundsSO.MinX, gameBoundsSO.MaxX), spawnPositionY, spawnPositionZ);
     }
 
     private IEnumerator SpawnAllWavesRoutine()

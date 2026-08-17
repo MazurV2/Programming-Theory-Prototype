@@ -6,20 +6,20 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private InputReaderSO inputReader;
     private Vector2 currentMovement;
 
-    [SerializeField] private HealthSystem healthSystem;
-
     [SerializeField] private GameObject plane;
 
-    [Space(10)]
+    [SerializeField] private HealthSystem healthSystem;
+
+    [Header("Movement Parameters")]
     [SerializeField] private float baseMoveSpeed = 5f;
     [SerializeField] private float baseTiltSpeed = 5f;
 
-    private float maxTiltX = 45f;
-    private float maxTiltY = 45f;
-
-    [Space(10)]
-    [SerializeField] private float xBoundary = 5f;
-    [SerializeField] private float yBoundary = 3f;
+    [Space(5)]
+    [SerializeField] private float maxTiltX = 45f;
+    [SerializeField] private float maxTiltY = 45f;
+    
+    [Space(5)]
+    [SerializeField] private GameBoundsSO gameBoundsSO;
 
     private void OnEnable()
     {
@@ -67,12 +67,8 @@ public class PlayerController : MonoBehaviour
 
     private void ClampPosition()
     {
-        Vector3 newPosition = transform.localPosition;
-
-        newPosition.x = Mathf.Clamp(newPosition.x, -xBoundary, xBoundary);
-        newPosition.y = Mathf.Clamp(newPosition.y, -yBoundary, yBoundary);
-
-        transform.localPosition = newPosition;
+        if (gameBoundsSO == null) return;
+        transform.localPosition = gameBoundsSO.ClampPosition(transform.localPosition);
     }
 
     private void Tilt()

@@ -7,8 +7,9 @@ public class CameraFollow : MonoBehaviour
     private Vector3 currentVelocity;
     [SerializeField] private float smoothTime = 0.25f;
 
-    [SerializeField] private float xBoundary = 3f;
-    [SerializeField] private float yBoundary = 3f;
+    [Header("Bounds Parameters")]
+    [SerializeField] private GameBoundsSO gameBoundsSO;
+    [SerializeField] private float cameraBoundsScale = 0.8f;
 
     private void Start()
     {
@@ -33,11 +34,7 @@ public class CameraFollow : MonoBehaviour
 
     private void ClampPosition()
     {
-        Vector3 newPosition = transform.position;
-
-        newPosition.x = Mathf.Clamp(newPosition.x, -xBoundary, xBoundary);
-        newPosition.y = Mathf.Clamp(newPosition.y, -yBoundary, yBoundary);
-
-        transform.position = newPosition;
+        if (gameBoundsSO == null) return;
+        transform.position = gameBoundsSO.ClampPositionScaled(transform.position, cameraBoundsScale);
     }
 }
