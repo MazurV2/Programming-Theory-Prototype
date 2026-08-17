@@ -1,2 +1,3 @@
 # Programming-Theory-Repo
-A repo for a simple custom prototype that incorporates the four pillars of OOP
+My own simple prototype that incorporates the four pillars of OOP. 
+Created for the Unity Junior Programmer Pathway.
