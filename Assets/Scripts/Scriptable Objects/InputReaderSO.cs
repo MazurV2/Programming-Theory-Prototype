@@ -5,32 +5,32 @@ using UnityEngine.InputSystem;
 [CreateAssetMenu(fileName = "InputReaderSO", menuName = "Input/Input Reader")]
 public class InputReaderSO : ScriptableObject
 {
-    private Controls controls;
+    private Controls _controls;
 
     public event Action<Vector2> onMoveInput;
     public event Action<bool> onShootInput;
 
     private void OnEnable()
     {
-        controls = new Controls();
-        controls.Enable();
+        _controls = new Controls();
+        _controls.Enable();
 
-        controls.Player.Move.performed += Move;
-        controls.Player.Move.canceled += Move;
+        _controls.Player.Move.performed += Move;
+        _controls.Player.Move.canceled += Move;
 
-        controls.Player.Shoot.performed += Shoot;
-        controls.Player.Shoot.canceled += Shoot;
+        _controls.Player.Shoot.performed += Shoot;
+        _controls.Player.Shoot.canceled += Shoot;
     }
 
     private void OnDisable()
     {
-        controls.Player.Move.performed -= Move;
-        controls.Player.Move.canceled -= Move;
+        _controls.Player.Move.performed -= Move;
+        _controls.Player.Move.canceled -= Move;
 
-        controls.Player.Shoot.performed -= Shoot;
-        controls.Player.Shoot.canceled -= Shoot;
+        _controls.Player.Shoot.performed -= Shoot;
+        _controls.Player.Shoot.canceled -= Shoot;
 
-        controls.Disable();
+        _controls.Disable();
     }
 
     private void Move(InputAction.CallbackContext context)

@@ -14,9 +14,9 @@ public class WaveEntrySO : ScriptableObject
     }
 
     [Header("Wave settings")]
-    [SerializeField] private List<WaveEntry> enemyGroupList;
-    [SerializeField] private float timeUntilNextWave = 5f;
+    [SerializeField] private List<WaveEntry> _enemyGroupList;
+    [SerializeField] private float _timeUntilNextWave = 5f;
 
-    public IReadOnlyList<WaveEntry> EnemyGroupList => enemyGroupList;
-    public float TimeUntilNextWave => timeUntilNextWave;
+    public IReadOnlyList<WaveEntry> EnemyGroupList => _enemyGroupList;
+    public float TimeUntilNextWave => _timeUntilNextWave;
 }

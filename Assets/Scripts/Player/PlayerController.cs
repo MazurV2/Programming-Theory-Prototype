@@ -3,12 +3,14 @@ using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private InputReaderSO inputReader;
-    private Vector2 currentMovement;
-
+    [Header("Model")]
     [SerializeField] private GameObject plane;
 
+    [Header("Other Systems")]
+    [SerializeField] private InputReaderSO inputReader;
+    private Vector2 currentMovement;
     [SerializeField] private HealthSystem healthSystem;
+    [SerializeField] private TransformVariableSO playerTransformSO;
 
     [Header("Movement Parameters")]
     [SerializeField] private float baseMoveSpeed = 5f;
@@ -23,6 +25,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
+        playerTransformSO.Value = transform;
+
         if (inputReader != null) 
         { 
             inputReader.onMoveInput += UpdateMoveVector;
